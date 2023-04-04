@@ -78,6 +78,18 @@ function Home() {
         >
         {/* 지도 마커표시 */}
         <MapMarker position={state.center}
+        image={{
+            src: "markerSmile.png", // 마커이미지의 주소입니다
+            size: {
+                width: 50,
+                height: 54,
+            }, // 마커이미지의 크기입니다
+            options: {
+                offset: {
+                x: 17,
+                y: 58,
+              }, // 마커이미지의 옵션입니다. 마커의 좌표와 일치시킬 이미지 안에서의 좌표를 설정합니다.
+        }}}
         >
             <span style={{ 
                 backgroundColor: 'white',
@@ -85,6 +97,7 @@ function Home() {
                 fontSize: "24px",
                 fontWeight: "700"
                 }}>Meetup point</span>
+            
         </MapMarker>
         {/* 지도 위 컨트롤러 */}
         <ZoomControl position={kakao.maps.ControlPosition.TOPRIGHT} />
