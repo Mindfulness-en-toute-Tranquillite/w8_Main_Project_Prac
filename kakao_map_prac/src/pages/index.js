@@ -1,4 +1,4 @@
-import { useCallback, useState } from "react";
+import { useCallback, useRef, useState } from "react";
 import { Map, MapMarker } from "react-kakao-maps-sdk"
 
 
@@ -14,8 +14,11 @@ function Home() {
         const searchAddressButtonHandler = (e) => {
             SetSearchAddress(e.target.value)
             }
-
-        // 주소 입력후 검색 클릭 시 원하는 주소로 이동
+    //  지도 정보 얻어오기
+    const mapRef = useRef();
+    const [info, setInfo] = useState();      
+    
+    // 주소 입력후 검색 클릭 시 원하는 주소로 이동
     const SearchMapWithAdress = () => {
     const geocoder = new kakao.maps.services.Geocoder();
     
@@ -61,6 +64,7 @@ function Home() {
         }
     return (
     <div>
+        {/* 맵 표시 */}
         <Map // 지도를 표시할 Container
         center={state.center}
         isPanto={state.isPanto}
@@ -69,8 +73,10 @@ function Home() {
         width: "100%",
         height: "520px",
         }}
-       level={4} // 지도의 확대 레벨
+        level={4} // 지도의 확대 레벨
+        ref={mapRef}
         >
+        {/* 지도 마커표시 */}
         <MapMarker position={state.center}
         >
             <span style={{ 
@@ -81,7 +87,7 @@ function Home() {
                 }}>Meetup point</span>
         </MapMarker>
         </Map>
-
+        {/* 지도 검색 (키워드 및 주소) */}
         <div>
             <input onChange={searchAddressButtonHandler}></input>
             <button type="Submit" onClick={() => {
@@ -89,6 +95,39 @@ function Home() {
             SearchMapWithKeyword();
             }}>검색</button>
         </div>
+
+        {/* 지도 정보 가져오기 */}
+        <button onClick={() => {
+            const map = mapRef.current
+            setInfo({
+                center: {
+                lat: map.getCenter().getLat(),
+                lng: map.getCenter().getLng(),
+                },
+                level: map.getLevel(),
+                typeId: map.getMapTypeId(),
+                swLatLng: {
+                    lat: map.getBounds().getSouthWest().getLat(),
+                    lng: map.getBounds().getSouthWest().getLng(),
+                },
+                neLatLng: {
+                    lat: map.getBounds().getNorthEast().getLat(),
+                    lng: map.getBounds().getNorthEast().getLng(),
+                },
+            })
+        }}>
+        정보
+        </button>
+        {info && (
+            <div>
+                <p>위도 : {info.center.lat}</p>
+                <p>경도 : {info.center.lng}</p>
+                <p>레벨 : {info.level}</p>
+                <p>타입 : {info.typeId}</p>
+                <p>남서쪽 좌표 : {info.swLatLng.lat}, {info.swLatLng.lng}</p>
+                <p>북동쪽 좌표 : {info.neLatLng.lat}, {info.neLatLng.lng}</p>
+            </div>
+        )}
     </div>
     )
 }
