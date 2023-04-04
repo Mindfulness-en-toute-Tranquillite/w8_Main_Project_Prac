@@ -1,5 +1,5 @@
 import { useCallback, useRef, useState } from "react";
-import { Map, MapMarker } from "react-kakao-maps-sdk"
+import { Map, MapMarker, MapTypeControl, ZoomControl } from "react-kakao-maps-sdk"
 
 
 function Home() {
@@ -86,6 +86,9 @@ function Home() {
                 fontWeight: "700"
                 }}>Meetup point</span>
         </MapMarker>
+        {/* 지도 위 컨트롤러 */}
+        <ZoomControl position={kakao.maps.ControlPosition.TOPRIGHT} />
+        <MapTypeControl position={kakao.maps.ControlPosition.TOPRIGHT}/>
         </Map>
         {/* 지도 검색 (키워드 및 주소) */}
         <div>
