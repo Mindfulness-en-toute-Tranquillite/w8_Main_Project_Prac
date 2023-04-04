@@ -5,7 +5,7 @@ import { Map, MapMarker } from "react-kakao-maps-sdk"
 function Home() {
     const [state, setState] = useState({
         // 지도의 초기 위치
-        center: { lat: 37.49676871972202, lng: 127.02474726969814 },
+        center: { lat: 37.553836, lng: 126.969652 },
         // 지도 위치 변경시 panto를 이용할지(부드럽게 이동)
         isPanto: true,
         });
@@ -20,6 +20,7 @@ function Home() {
     const geocoder = new kakao.maps.services.Geocoder();
     
     let callback = function(result, status) {
+        console.log("kakao에는 뭐가 들어있을까? ->", kakao)
         if (status === kakao.maps.services.Status.OK) {
         const newSearch = result[0]
         setState({
@@ -68,15 +69,25 @@ function Home() {
         width: "100%",
         height: "520px",
         }}
-       level={3} // 지도의 확대 레벨
-        />
+       level={4} // 지도의 확대 레벨
+        >
+        <MapMarker position={state.center}
+        >
+            <span style={{ 
+                backgroundColor: 'white',
+                color: "#000", 
+                fontSize: "24px",
+                fontWeight: "700"
+                }}>Meetup point</span>
+        </MapMarker>
+        </Map>
 
         <div>
             <input onChange={searchAddressButtonHandler}></input>
-            <button onClick={() => {
+            <button type="Submit" onClick={() => {
             SearchMapWithAdress();
             SearchMapWithKeyword();
-            }}>클릭</button>
+            }}>검색</button>
         </div>
     </div>
     )
