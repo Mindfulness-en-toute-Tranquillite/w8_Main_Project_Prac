@@ -1,5 +1,13 @@
-import { useCallback, useRef, useState } from "react";
-import { Map, MapMarker, MapTypeControl, ZoomControl } from "react-kakao-maps-sdk"
+/*global kakao*/
+import { useCallback, useEffect, useRef, useState } from "react";
+import { Map, MapInfoWindow, MapMarker, MapTypeControl, MapTypeId, ZoomControl, AddMapControlStyle } from "react-kakao-maps-sdk"
+
+//kakao 못 불러오는거 에러 해결 코드 시도(실패)
+// window.onload = function () {
+//     kakao.maps.load(function () {
+//         // 지도를 생성합니다
+//     })
+// }
 
 
 function Home() {
@@ -18,6 +26,78 @@ function Home() {
     const mapRef = useRef();
     const [info, setInfo] = useState();      
     
+    //  지도 타입 변경 state
+    const [mapTypeIds, setMapTypeIds] = useState([])
+
+    // 지도 타입 변경 핸들러
+    const mapTypeChangeHandler = (target, type) => {
+        if (target.checked) {
+            return setMapTypeIds([...mapTypeIds, type])
+        }
+        setMapTypeIds(
+            mapTypeIds.filter(
+            (mapTypeId) => mapTypeId !== type
+            )
+        )
+        console.log("target=> ", target)
+    }
+    //  geolocation
+    useEffect(() => {
+        if (navigator.geolocation) {
+          // GeoLocation을 이용해서 접속 위치를 얻어옵니다
+          navigator.geolocation.getCurrentPosition(
+            (position) => {
+              setState((prev) => ({
+                ...prev,
+                center: {
+                  lat: position.coords.latitude, // 위도
+                  lng: position.coords.longitude, // 경도
+                },
+                isLoading: false,
+              }))
+            },
+            (err) => {
+              setState((prev) => ({
+                ...prev,
+                errMsg: err.message,
+                isLoading: false,
+              }))
+            }
+          )
+        } else {
+          // HTML5의 GeoLocation을 사용할 수 없을때 마커 표시 위치와 인포윈도우 내용을 설정합니다
+          setState((prev) => ({
+            ...prev,
+            errMsg: "geolocation을 사용할수 없어요..",
+            isLoading: false,
+          }))
+        }
+      }, [])
+    //  사용자 (커스텀) 컨트롤러 지도종류
+    // const setMapType = (maptype) => {
+    //     const map = mapRef.current
+    //     const roadmapControl = document.getElementById("btnRoadmap")
+    //     const skyviewControl = document.getElementById("btnSkyview")
+    //     if (maptype === "roadmap") {
+    //         map.setMapTypeId(kakao.maps.MapTypeId.ROADMAP)
+    //         roadmapControl.className = "selected_btn"
+    //         skyviewControl.className = "btn"
+    //     } else {
+    //         map.setMapTypeId(kakao.maps.MapTypeId.HYBRID)
+    //         skyviewControl.className = "selected_btn"
+    //         roadmapControl.className = "btn"
+    //     }
+    // }
+    //  사용자 (커스텀) 컨트롤러 줌 인&아웃
+    // const zoomIn = () => {
+    //     const map = mapRef.current
+    //     map.setLevel(map.getLevel() - 1)
+    // }
+    // const zoomOut = () => {
+    //     const map = mapRef.current
+    //     map.setLevel(map.getLevel() + 1)
+    // }
+
     // 주소 입력후 검색 클릭 시 원하는 주소로 이동
     const SearchMapWithAdress = () => {
     const geocoder = new kakao.maps.services.Geocoder();
@@ -46,7 +126,7 @@ function Home() {
         }
         };
         ps.keywordSearch(`${searchAddress}`, placesSearchCB); 
-    
+    console.log("kakao가 로드되고 있니? -> ", kakao)
 
         //  위도, 경도로 지도 이동
     // const getAddress = useCallback((lat, lng) => {
@@ -79,30 +159,74 @@ function Home() {
         {/* 지도 마커표시 */}
         <MapMarker position={state.center}
         image={{
-            src: "markerSmile.png", // 마커이미지의 주소입니다
+            src: "MaannajanLogo.png", // 마커이미지의 주소.
             size: {
-                width: 50,
-                height: 54,
-            }, // 마커이미지의 크기입니다
+                width: 30,
+                height: 38,
+            }, // 마커이미지의 크기.
             options: {
                 offset: {
-                x: 17,
-                y: 58,
-              }, // 마커이미지의 옵션입니다. 마커의 좌표와 일치시킬 이미지 안에서의 좌표를 설정합니다.
+                x: 14,
+                y: 47,
+              }, // 마커이미지의 옵션. 마커의 좌표와 일치시킬 이미지 안에서의 좌표를 설정.
         }}}
         >
-            <span style={{ 
+
+            {/* <span style={{ 
                 backgroundColor: 'white',
                 color: "#000", 
                 fontSize: "24px",
                 fontWeight: "700"
-                }}>Meetup point</span>
-            
+                }}>Meetup point</span> */}
         </MapMarker>
+        
+        <MapInfoWindow // 인포윈도우를 생성하고 지도에 표시.
+        position={state.center}// 인포윈도우가 표시될 위치.
+        removable={true} // removeable 속성을 ture 로 설정하면 인포윈도우를 닫을 수 있는 x버튼이 표시.
+        >
+        {/* 인포윈도우에 표출될 내용으로 HTML 문자열이나 React Component가 가능합니다 */}
+        <div style={{ padding: "5px", color: "#000"}}>Hello World!</div>
+        </MapInfoWindow>
+
         {/* 지도 위 컨트롤러 */}
-        <ZoomControl position={kakao.maps.ControlPosition.TOPRIGHT} />
-        <MapTypeControl position={kakao.maps.ControlPosition.TOPRIGHT}/>
+        <ZoomControl 
+        // position={kakao.maps.ControlPosition.TOPRIGHT} 
+        />
+        <MapTypeControl
+        // position={kakao.maps.ControlPosition.TOPLEFT}
+        />
+
+        {/* 지도에 교통정보를 표시하도록 지도타입을 추가합니다 */}
+        {/* <MapTypeId type={kakao.maps.MapTypeId.TRAFFIC}/> */}
+        {/* 지도에 로드뷰 정보가 있는 도로를 표시하도록 지도타입을 추가합니다 */}
+        {/* <MapTypeId type={kakao.maps.MapTypeId.ROADVIEW}/> */}
+        {/* 지도에 지형정보를 표시하도록 지도타입을 추가합니다 */}
+        {/* <MapTypeId type={kakao.maps.MapTypeId.TERRAIN}/> */}
+
+        {/* 지도 타입 체크박스  */}
+        {mapTypeIds.map(mapTypeId => <MapTypeId key={mapTypeId} type={mapTypeId} />)}
         </Map>
+        {/* 지도 타입 체크박스 */}
+        <input
+            type="checkbox"
+            onChange={({ target }) => mapTypeChangeHandler(target, kakao.maps.MapTypeId.TERRAIN)}
+        />
+        지형정보 보기
+        <input
+            type="checkbox"
+            onChange={({ target }) => mapTypeChangeHandler(target, kakao.maps.MapTypeId.TRAFFIC)}
+        />
+        교통정보 보기
+        <input
+            type="checkbox"
+            onChange={({ target }) => mapTypeChangeHandler(target, kakao.maps.MapTypeId.BICYCLE)}
+        />
+        자전거 교통정보 보기
+        <input
+            type="checkbox"
+            onChange={({ target }) => mapTypeChangeHandler(target, kakao.maps.MapTypeId.USE_DISTRICT)}
+        />
+        지적편집도 보기
         {/* 지도 검색 (키워드 및 주소) */}
         <div>
             <input onChange={searchAddressButtonHandler}></input>
@@ -144,10 +268,47 @@ function Home() {
                 <p>북동쪽 좌표 : {info.neLatLng.lat}, {info.neLatLng.lng}</p>
             </div>
         )}
+
+        {/* 일반지도 & 스카이뷰 버튼, 지도 확대, 축소 컨트롤 */}
+        {/* <AddMapControlStyle/> */}
+        {/* 일반지도 & 스카이뷰 버튼 */}
+        {/* <div className="custom_typecontrol radius_border">
+            <span
+                id="btnRoadmap"
+                className="selected_btn"
+                onClick={() => setMapType("roadmap")}
+            >
+            지도
+            </span>
+            <span
+                id="btnSkyview"
+                className="btn"
+                onClick={() => {
+                setMapType("skyview")
+                }}
+            >
+            스카이뷰
+            </span>
+        </div> */}
+        
+        {/* 지도 확대, 축소 컨트롤 div */}
+        {/* <div className="custom_zoomcontrol radius_border">
+            <span onClick={zoomIn}>
+                <img
+                src="https://t1.daumcdn.net/localimg/localimages/07/mapapidoc/ico_plus.png"
+                alt="확대"
+                />
+            </span>
+            <span onClick={zoomOut}>
+                <img
+                src="https://t1.daumcdn.net/localimg/localimages/07/mapapidoc/ico_minus.png"
+                alt="축소"
+                />
+            </span>
+        </div> */}
     </div>
     )
 }
-
 export default Home
 
 
