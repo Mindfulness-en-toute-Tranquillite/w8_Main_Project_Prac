@@ -41,38 +41,40 @@ function Home() {
         )
         console.log("target=> ", target)
     }
-    //  geolocation
-    useEffect(() => {
+    //  Geolocation 
+    useEffect(() => {getGeolocationButtonHandler({ target: { value: '' } });},[])
+    //  Geolocation Button Handler
+    const getGeolocationButtonHandler = () => {
         if (navigator.geolocation) {
           // GeoLocation을 이용해서 접속 위치를 얻어옵니다
-          navigator.geolocation.getCurrentPosition(
+            navigator.geolocation.getCurrentPosition(
             (position) => {
-              setState((prev) => ({
+                setState((prev) => ({
                 ...prev,
                 center: {
                   lat: position.coords.latitude, // 위도
                   lng: position.coords.longitude, // 경도
                 },
                 isLoading: false,
-              }))
+                }))
             },
             (err) => {
-              setState((prev) => ({
+                setState((prev) => ({
                 ...prev,
                 errMsg: err.message,
                 isLoading: false,
-              }))
+                }))
             }
-          )
+        )
         } else {
           // HTML5의 GeoLocation을 사용할 수 없을때 마커 표시 위치와 인포윈도우 내용을 설정합니다
-          setState((prev) => ({
+            setState((prev) => ({
             ...prev,
             errMsg: "geolocation을 사용할수 없어요..",
             isLoading: false,
-          }))
+            }));
         }
-      }, [])
+    };
     //  사용자 (커스텀) 컨트롤러 지도종류
     // const setMapType = (maptype) => {
     //     const map = mapRef.current
@@ -171,26 +173,26 @@ function Home() {
               }, // 마커이미지의 옵션. 마커의 좌표와 일치시킬 이미지 안에서의 좌표를 설정.
         }}}
         >
-
-            {/* <span style={{ 
-                backgroundColor: 'white',
+            {/* 마커에 인포윈도우 생성하기 */}
+            <div style={{ 
+                // padding: "5px",
                 color: "#000", 
-                fontSize: "24px",
-                fontWeight: "700"
-                }}>Meetup point</span> */}
+                }}>Meetup point
+            </div>
         </MapMarker>
         
-        <MapInfoWindow // 인포윈도우를 생성하고 지도에 표시.
+        {/* <MapInfoWindow // 인포윈도우를 생성하고 지도에 표시.
         position={state.center}// 인포윈도우가 표시될 위치.
         removable={true} // removeable 속성을 ture 로 설정하면 인포윈도우를 닫을 수 있는 x버튼이 표시.
-        >
+        > */}
         {/* 인포윈도우에 표출될 내용으로 HTML 문자열이나 React Component가 가능합니다 */}
-        <div style={{ padding: "5px", color: "#000"}}>Hello World!</div>
-        </MapInfoWindow>
+        {/* <div style={{ padding: "5px", color: "#000"}}>Meetup Point</div>
+        </MapInfoWindow> */}
+
 
         {/* 지도 위 컨트롤러 */}
         <ZoomControl 
-        // position={kakao.maps.ControlPosition.TOPRIGHT} 
+        // position={kakao.maps.ControlPosition.TOPLEFT} 
         />
         <MapTypeControl
         // position={kakao.maps.ControlPosition.TOPLEFT}
@@ -205,6 +207,19 @@ function Home() {
 
         {/* 지도 타입 체크박스  */}
         {mapTypeIds.map(mapTypeId => <MapTypeId key={mapTypeId} type={mapTypeId} />)}
+        {/* Geolocation Button */}
+        <div
+        style={{position: "relative"}}>
+        <button 
+        style={{width: "20px", height: "20px", position: "absolute", top: "10px", right: "10px"}}
+        onClick={getGeolocationButtonHandler}>
+        <img
+        src= "myLocation.png" // Geolocation이미지의 주소.
+        alt="Geolocation button"
+        style={{width: "100%", height: "100%"}}
+        />
+        </button>
+        </div>
         </Map>
         {/* 지도 타입 체크박스 */}
         <input
