@@ -12,8 +12,8 @@ export const SearchingTwoOnMap = () => {
     SetSearchAddress(e.target.value)
     }
     const handleSearchAddress2 = (e) => {
-        SetSearchAddress2(e.target.value)
-        }
+    SetSearchAddress2(e.target.value)
+    }
     const [searchAddress, SetSearchAddress] = useState();
     // 키워드 입력후 검색 클릭 시 원하는 키워드의 주소로 이동
     const SearchMap = () => {

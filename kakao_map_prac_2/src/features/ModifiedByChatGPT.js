@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import { Map, MapMarker } from 'react-kakao-maps-sdk';
 
 export const ModifiedByChatGPT = () => {
@@ -36,33 +36,39 @@ export const ModifiedByChatGPT = () => {
             if (status === kakao.maps.services.Status.OK) {
                 const newSearch = data[0];
                 const prevPositions = [...positions]; // positions 배열을 복제하여 prevPositions로 사용
-                const newPositions = [
-                    ...prevPositions,
-                    {
-                        title: newSearch.place_name,
-                        latlng: { lat: newSearch.y, lng: newSearch.x },
-                    },
-                    ];
                 // 검색 결과를 cetner에 추가.(검색결과위치로 좌표찍기)
                 setCenter({ lat: newSearch.y, lng: newSearch.x });
                 // 검색 결과를 positions에 추가.(마커를 찍어줌))
-                setPositions(newPositions);
-                if (newPositions.length >= 2) {
-                  const pos1 = newPositions[newPositions.length - 2].latlng;
-                  const pos2 = newPositions[newPositions.length - 1].latlng;
-                  const middlePos = getMiddlePosition(pos1, pos2);
-                  setPositions((prevPositions) => [
-                    ...prevPositions,
-                    { title: '', latlng: middlePos },
-                  ]);
-                  setIsPanto(false);
-                } else {
-                  setIsPanto(true);
-                }
-              }
-            };
-            ps.keywordSearch(`${searchAddress}`, placesSearchCB);
-          };
+                setPositions((prevPositions) => [
+                    ...prevPositions,          
+                    { 
+                    title: newSearch.place_name, 
+                    latlng: { lat: newSearch.y, lng: newSearch.x } 
+                    },
+                ]);
+                
+                // 검색 결과가 2개 이상이면 두 지점의 중간 지점을 구하여 positions에 추가
+                if (prevPositions.length === 1) {
+                    const pos1 = prevPositions[0].latlng;
+                    const pos2 = { lat: newSearch.y, lng: newSearch.x };
+                    const middlePos = getMiddlePosition(pos1, pos2);
+                    setPositions((prevPositions) => [
+                        ...prevPositions,
+                        { 
+                        title: '', 
+                        latlng: middlePos 
+                        },
+                        { 
+                        title: newSearch.place_name, 
+                        latlng: { lat: newSearch.y, lng: newSearch.x } 
+                        },
+                    ]);
+                setIsPanto(false);
+            } 
+        }
+        };
+        ps.keywordSearch(`${searchAddress}`, placesSearchCB);
+    };
 
     // useEffect(() => {
     //     if (positions.length >= 2) {
@@ -78,7 +84,7 @@ export const ModifiedByChatGPT = () => {
     //         ]);
     //     }
     // }, [positions]);
-
+    
 return (
     <>
         <Map
