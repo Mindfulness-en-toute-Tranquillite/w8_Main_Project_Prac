@@ -1,6 +1,6 @@
 /*global kakao*/
 import { useCallback, useEffect, useRef, useState } from "react";
-import { Map, MapInfoWindow, MapMarker, MapTypeControl, MapTypeId, ZoomControl, AddMapControlStyle } from "react-kakao-maps-sdk"
+import { Map, MapInfoWindow, MapMarker, MapTypeControl, MapTypeId, ZoomControl, AddMapControlStyle, Roadview } from "react-kakao-maps-sdk"
 
 //kakao 못 불러오는거 에러 해결 코드 시도(실패)
 // window.onload = function () {
@@ -24,11 +24,12 @@ function Home() {
             }
     //  지도 정보 얻어오기
     const mapRef = useRef();
-    const [info, setInfo] = useState();      
-    
+    const [info, setInfo] = useState();   
+    //  키워드로 장소 검색 state
+    const [markers, setMarkers] = useState([])
+    const [map, setMap] = useState()
     //  지도 타입 변경 state
     const [mapTypeIds, setMapTypeIds] = useState([])
-
     // 지도 타입 변경 핸들러
     const mapTypeChangeHandler = (target, type) => {
         if (target.checked) {
@@ -157,9 +158,12 @@ function Home() {
         }}
         level={4} // 지도의 확대 레벨
         ref={mapRef}
+        onCreate={setMap}
         >
+        
         {/* 지도 마커표시 */}
-        <MapMarker position={state.center}
+        <MapMarker 
+        position={state.center}
         image={{
             src: "MaannajanLogo.png", // 마커이미지의 주소.
             size: {
@@ -258,7 +262,7 @@ function Home() {
                 center: {
                 lat: map.getCenter().getLat(),
                 lng: map.getCenter().getLng(),
-                },
+                },  
                 level: map.getLevel(),
                 typeId: map.getMapTypeId(),
                 swLatLng: {
@@ -283,7 +287,7 @@ function Home() {
                 <p>북동쪽 좌표 : {info.neLatLng.lat}, {info.neLatLng.lng}</p>
             </div>
         )}
-
+    
         {/* 일반지도 & 스카이뷰 버튼, 지도 확대, 축소 컨트롤 */}
         {/* <AddMapControlStyle/> */}
         {/* 일반지도 & 스카이뷰 버튼 */}
