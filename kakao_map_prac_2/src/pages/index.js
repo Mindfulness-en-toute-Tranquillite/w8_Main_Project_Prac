@@ -1,3 +1,4 @@
+import GetInfo3Person from '@/features/GetInfo3Person'
 import KeywordMapSearch from '@/features/KeywordMapSearch'
 import MarkersOnMap from '@/features/MarkersOnMap'
 import ModifiedByChatGPT from '@/features/ModifiedByChatGPT'
@@ -10,7 +11,8 @@ function index() {
         {/* <MarkersOnMap></MarkersOnMap>
         <KeywordMapSearch/> */}
         {/* <SearchingTwoOnMap></SearchingTwoOnMap> */}
-        <ModifiedByChatGPT />
+        {/* <ModifiedByChatGPT /> */}
+        <GetInfo3Person></GetInfo3Person>
     </div>
     )
 }
