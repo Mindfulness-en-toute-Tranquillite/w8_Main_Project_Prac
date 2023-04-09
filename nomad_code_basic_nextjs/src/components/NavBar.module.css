@@ -1,0 +1,9 @@
+.link {
+    /* underline 지우는 것 */
+    text-decoration: none;
+}
+
+
+.active {
+    color: tomato;
+}

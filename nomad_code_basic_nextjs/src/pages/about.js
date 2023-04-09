@@ -4,8 +4,8 @@ import React from 'react'
 export default function about() {
     return (
         <div>
-            <NavBar />
-            <h1>Hello</h1>
+            {/* <NavBar /> */}
+            <h1>about</h1>
         </div>
     )
 }
