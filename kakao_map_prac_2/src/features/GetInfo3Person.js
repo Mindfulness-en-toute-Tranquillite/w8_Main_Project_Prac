@@ -27,13 +27,30 @@ export const GetInfo3Person = () => {
     const searchAddressButtonHandler3 = (e) => {
         setSearchAddress3(e.target.value);
     };
+    //  위도, 경도 값을 저장할 state 변수
+    const [latitude, setLatitude] = useState(null);
+    const [longitude, setLongitude] = useState(null);
     //  키워드 검색 로직
     const handleSearchMap = (searchAddress) => {
         const ps = new kakao.maps.services.Places();
         const placesSearchCB = function (data, status, pagination) {
             if (status === kakao.maps.services.Status.OK) {
                 const newSearch = data[0];
-                const prevPositions = [...positions]; // positions 배열을 복제하여 prevPositions로 사용
+                // 검색 결과의 위도, 경도 값을 state 변수에 저장
+                setLatitude(newSearch.y);
+                setLongitude(newSearch.x);
+
+                  // 서버로 위도, 경도 값 전송
+                axios.post("/api/location", { latitude: newSearch.y, longitude: newSearch.x })
+                    .then((response) => {
+                        console.log(response.data);
+                    })
+                    .catch((error) => {
+                        console.error(error);
+                    });
+
+                // positions 배열을 복제하여 prevPositions로 사용
+                const prevPositions = [...positions]; 
                 // 검색 결과를 center에 추가.(검색결과위치로 좌표찍기)
                 setCenter({ lat: newSearch.y, lng: newSearch.x });
                 // 검색 결과를 positions에 추가.(마커를 찍어줌))
@@ -97,3 +114,35 @@ return (
     )
 }
 export default GetInfo3Person
+
+
+
+// // 서버에서 받아온 위치 정보를 저장할 상태값 추가
+// const [serverPositions, setServerPositions] = useState([]);
+
+// // 서버에서 위치 정보를 받아와 지도에 마커를 찍는 함수
+// const getServerPositions = () => {
+//   axios.get("/api/location")
+//     .then((response) => {
+//       // 서버에서 받아온 위치 정보를 state에 저장
+//       setServerPositions(response.data);
+
+//       // 받아온 위치 정보를 이용하여 지도에 마커를 찍음
+//       const markers = response.data.map((serverPosition) => {
+//         const marker = new kakao.maps.Marker({
+//           map: map,
+//           position: new kakao.maps.LatLng(serverPosition.latitude, serverPosition.longitude),
+//         });
+//         return marker;
+//       });
+//       setMarkers((prevMarkers) => [...prevMarkers, ...markers]);
+//     })
+//     .catch((error) => {
+//       console.error(error);
+//     });
+// };
+
+// // 컴포넌트가 마운트될 때 서버에서 위치 정보를 받아와 마커를 찍음
+// useEffect(() => {
+//   getServerPositions();
+// }, []);
