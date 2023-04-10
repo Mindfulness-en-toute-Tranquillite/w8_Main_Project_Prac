@@ -1,17 +1,11 @@
-import NavBar from "@/components/NavBar";
+import Layout from "@/components/Layout";
 import "../styles/globals.css";
 
 export default function App({Component, pageProps}){
     return (
-    <div>
-        <NavBar />
+    <Layout>
         <Component {...pageProps} />
-        <style jsx global>{`
-            a {
-                color: white;
-            }
-            `}</style>
-    </div>
+    </Layout>
     );
 }
 //이게 기본적인 어플리케이션 컴포넌트의 기본적인 기능.
