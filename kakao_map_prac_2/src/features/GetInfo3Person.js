@@ -1,3 +1,5 @@
+import { apis } from '@/shared/axios';
+import axios from 'axios';
 import React, { useState } from 'react';
 import { Map, MapMarker } from 'react-kakao-maps-sdk';
 
@@ -41,7 +43,8 @@ export const GetInfo3Person = () => {
                 setLongitude(newSearch.x);
 
                   // 서버로 위도, 경도 값 전송
-                axios.post("/api/location", { latitude: newSearch.y, longitude: newSearch.x })
+                axios.post("http://3.34.179.86/api/find", 
+                { latitude: newSearch.y, longitude: newSearch.x })
                     .then((response) => {
                         console.log(response.data);
                     })
@@ -97,6 +100,7 @@ return (
         A : &nbsp;
         <input onChange={searchAddressButtonHandler1} value={searchAddress1} />
         <button onClick={() => handleSearchMap(searchAddress1)}>검색</button>
+        <button>확인</button>
     </div>
 
     <div>
@@ -122,7 +126,7 @@ export default GetInfo3Person
 
 // // 서버에서 위치 정보를 받아와 지도에 마커를 찍는 함수
 // const getServerPositions = () => {
-//   axios.get("/api/location")
+//   apis.get("/api/location")
 //     .then((response) => {
 //       // 서버에서 받아온 위치 정보를 state에 저장
 //       setServerPositions(response.data);
