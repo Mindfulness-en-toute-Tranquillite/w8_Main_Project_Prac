@@ -5,6 +5,7 @@ import MarkersOnMap from '@/features/MarkersOnMap'
 import ModifiedByChatGPT from '@/features/ModifiedByChatGPT'
 import { SearchingTwoOnMap } from '@/features/SearchingTwoOnMap'
 import Try1 from '@/features/Try1'
+import Try2 from '@/features/try2'
 import React from 'react'
 
 function index() {
@@ -16,7 +17,8 @@ function index() {
         {/* <ModifiedByChatGPT /> */}
         {/* <GetInfo3Person></GetInfo3Person> */}
         {/* <Location4InfoWithServer/> */}
-        <Try1></Try1>
+        {/* <Try1></Try1> */}
+        <Try2 />
     </div>
     )
 }
