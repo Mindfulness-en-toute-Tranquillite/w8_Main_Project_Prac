@@ -2,7 +2,7 @@ import axios from 'axios';
 import React, { useRef, useState } from 'react'
 import { Map, MapMarker } from 'react-kakao-maps-sdk';
 import { useMutation } from 'react-query';
-
+import { getKakaoAddress } from './KakaoAdressAPI';
 
 export const Try2 = () => {
     //  지도 초기 위치 및 위도경도 state값
@@ -83,7 +83,7 @@ export const Try2 = () => {
     };
         ps.keywordSearch(`${searchAddress}`, placesSearchCB);
     }
-    
+    <getKakaoAddress></getKakaoAddress>
     
     
     return (
@@ -169,6 +169,7 @@ export const Try2 = () => {
                 <button onClick={() => mutate(location)}>중간위치찾기</button>
             </div>
         </div>
+        <getKakaoAddress></getKakaoAddress>
     </div>
     )
 }
