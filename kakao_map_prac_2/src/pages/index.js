@@ -10,6 +10,7 @@ import React from 'react'
 import { getKakaoAddress } from '@/features/KakaoAdressAPI'
 import AddressSearch from '@/features/AddressSearch'
 import AddressSearchFeatures from '@/features/\bAdressSearchFeatures'
+import Sample5 from '@/features/searchAdressWithMap'
 
 function index() {
     return (
@@ -21,9 +22,10 @@ function index() {
         {/* <GetInfo3Person></GetInfo3Person> */}
         {/* <Location4InfoWithServer/> */}
         {/* <Try1></Try1> */}
-        {/* <Try2 /> */}
+        <Try2 />
         {/* <getKakaoAddress></getKakaoAddress> */}
-        <AddressSearchFeatures></AddressSearchFeatures>
+        {/* <AddressSearchFeatures></AddressSearchFeatures> */}
+        {/* <Sample5/> */}
     </div>
     )
 }

@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import AddressSearch from "./AddressSearch";
 
-const App = () => {
+const AddressSearchFeatures = () => {
   const [address, setAddress] = useState({
     postcode: "",
     address: "",
@@ -25,4 +25,4 @@ const App = () => {
   );
 };
 
-export default App;
+export default AddressSearchFeatures;

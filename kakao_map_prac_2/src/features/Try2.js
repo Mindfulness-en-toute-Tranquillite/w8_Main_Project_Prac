@@ -2,6 +2,7 @@ import axios from 'axios';
 import React, { useRef, useState } from 'react'
 import { Map, MapMarker } from 'react-kakao-maps-sdk';
 import { useMutation } from 'react-query';
+import DaumPostcode from './DaumPostcode';
 import { getKakaoAddress } from './KakaoAdressAPI';
 
 export const Try2 = () => {
@@ -110,14 +111,7 @@ export const Try2 = () => {
             </Map>
         </div>
 
-        <div>
-            <input
-            name='search1'
-            value={searchAddress1}
-            onChange={searchAddressButtonHandler1}
-            />
-            <button onClick={() => SearchMap(searchAddress1)}>검색</button>
-        </div>
+
         <div>
             <div>
                 A : <input
@@ -169,7 +163,8 @@ export const Try2 = () => {
                 <button onClick={() => mutate(location)}>중간위치찾기</button>
             </div>
         </div>
-        <getKakaoAddress></getKakaoAddress>
+        {/* <getKakaoAddress></getKakaoAddress> */}
+        <DaumPostcode/>
     </div>
     )
 }
