@@ -14,12 +14,13 @@ import Sample5 from '@/features/searchAdressWithMap'
 import MapPage from '@/features2/AdressOnMap'
 import SearchPlace from '@/mapKeyword/SearchPlace'
 import MapContainer from '@/mapKeyword/MapContainer'
+import MapContainerWrapper from '@/mapKeyword/MapContainer'
 
 function index() {
     return (
     <div>
         {/* <MarkersOnMap></MarkersOnMap> */}
-        <KeywordMapSearch/>
+        {/* <KeywordMapSearch/> */}
         {/* <SearchingTwoOnMap></SearchingTwoOnMap> */}
         {/* <ModifiedByChatGPT /> */}
         {/* <GetInfo3Person></GetInfo3Person> */}
@@ -32,6 +33,7 @@ function index() {
         {/* <MapPage></MapPage> */}
         {/* <SearchPlace/> */}
         {/* <MapContainer/> */}
+        <MapContainerWrapper/>
     </div>
     )
 }
