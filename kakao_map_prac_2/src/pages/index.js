@@ -11,21 +11,27 @@ import { getKakaoAddress } from '@/features/KakaoAdressAPI'
 import AddressSearch from '@/features/AddressSearch'
 import AddressSearchFeatures from '@/features/\bAdressSearchFeatures'
 import Sample5 from '@/features/searchAdressWithMap'
+import MapPage from '@/features2/AdressOnMap'
+import SearchPlace from '@/mapKeyword/SearchPlace'
+import MapContainer from '@/mapKeyword/MapContainer'
 
 function index() {
     return (
     <div>
-        {/* <MarkersOnMap></MarkersOnMap>
-        <KeywordMapSearch/> */}
+        {/* <MarkersOnMap></MarkersOnMap> */}
+        <KeywordMapSearch/>
         {/* <SearchingTwoOnMap></SearchingTwoOnMap> */}
         {/* <ModifiedByChatGPT /> */}
         {/* <GetInfo3Person></GetInfo3Person> */}
         {/* <Location4InfoWithServer/> */}
         {/* <Try1></Try1> */}
-        <Try2 />
+        {/* <Try2 /> */}
         {/* <getKakaoAddress></getKakaoAddress> */}
         {/* <AddressSearchFeatures></AddressSearchFeatures> */}
         {/* <Sample5/> */}
+        {/* <MapPage></MapPage> */}
+        {/* <SearchPlace/> */}
+        {/* <MapContainer/> */}
     </div>
     )
 }
