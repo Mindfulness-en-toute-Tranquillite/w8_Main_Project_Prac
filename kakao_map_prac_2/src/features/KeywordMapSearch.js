@@ -2,25 +2,15 @@ import React, { useEffect, useState } from 'react'
 import { Map, MapMarker } from 'react-kakao-maps-sdk'
 
 function KeywordMapSearch(){
-    const [info, setInfo] = useState(null)
+    const [info, setInfo] = useState()
     const [markers, setMarkers] = useState([])
-    const [map, setMap] = useState(null)
-    const [word, setWord] = useState("");
-
-    const onChangeSearch = (e) => {
-      setWord(e.target.value); 
-    };
-    
-    const searchForm = document.getElementById("submit_btn");
-		searchForm?.addEventListener("click", function (e) {
-		e.preventDefault();
-		searchPlaces();
-    });
+    const [map, setMap] = useState()
+  
     useEffect(() => {
       if (!map) return
       const ps = new kakao.maps.services.Places()
   
-      ps.keywordSearch({word}, (data, status, _pagination) => {
+      ps.keywordSearch("이태원 맛집", (data, status, _pagination) => {
         if (status === kakao.maps.services.Status.OK) {
           // 검색된 장소 위치를 기준으로 지도 범위를 재설정하기위해
           // LatLngBounds 객체에 좌표를 추가합니다
@@ -48,7 +38,6 @@ function KeywordMapSearch(){
     }, [map])
   
     return (
-      <div>
       <Map // 로드뷰를 표시할 Container
         center={{
           lat: 37.566826,
@@ -73,21 +62,6 @@ function KeywordMapSearch(){
           </MapMarker>
         ))}
       </Map>
-       <input
-       type="text"
-       value={word}
-       id="keyword"
-       placeholder="주소나 키워드를 검색해주세요."
-       onChange={onChangeSearch}
-     />
-     <form>
-      <button
-      id="submit_btn"
-      onClick={() => searchPlaces()}
-      >검색</button>
-     </form>
-     </div>
     )
-    
   }
 export default KeywordMapSearch
