@@ -34,13 +34,30 @@ function KeywordMapSearch(){
             bounds.extend(new kakao.maps.LatLng(data[i].y, data[i].x))
           }
           setMarkers(markers)
-  
           // 검색된 장소 위치를 기준으로 지도 범위를 재설정합니다
           map.setBounds(bounds)
         }
       })
     }, [map])
-  
+    
+    function displayMarker(place) {
+      const marker = new window.kakao.maps.Marker({
+        map,
+        position: new window.kakao.maps.LatLng(place.y, place.x),
+      });
+      window.kakao.maps.event.addListener(marker, "click", function (mouseEvent) {
+          props.setAddress(place);
+          infowindow.setContent(`
+          <span>
+          ${place.place_name}
+          </span>
+          `);
+          infowindow.open(map, marker);
+          const moveLatLon = new window.kakao.maps.LatLng(place.y, place.x);
+          map.panTo(moveLatLon);
+        }
+      );
+    }
     return (
       <Map // 로드뷰를 표시할 Container
         center={{
