@@ -1,3 +1,4 @@
+import Portal from '@/components/Portal';
 import React, { useEffect, useState } from 'react';
 import { Map } from 'react-kakao-maps-sdk';
 import styled from 'styled-components';
@@ -352,7 +353,7 @@ const MapContainer = ({ props }) => {
                             </div>
                         </div>
                         ))}
-                        
+                        <Portal />
                     
                 
             </MapSection>
