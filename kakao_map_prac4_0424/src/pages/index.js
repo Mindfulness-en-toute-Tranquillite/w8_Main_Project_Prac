@@ -1,8 +1,11 @@
+import GeolocationPrac from '@features/0516GeolocationPrac'
 import React from 'react'
 
 function index() {
   return (
-    <div>index</div>
+    <div>
+      <GeolocationPrac/>
+    </div>
   )
 }
 
