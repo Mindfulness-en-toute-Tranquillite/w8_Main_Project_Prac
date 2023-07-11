@@ -145,6 +145,7 @@ function Home() {
     //     geocoder.coord2Address(coord.getLng(), coord.getLat(), callback);
     //     }, []); 
         }
+        const { kakao } = window;
     return (
     <div>
         {/* 맵 표시 */}
@@ -196,10 +197,10 @@ function Home() {
 
         {/* 지도 위 컨트롤러 */}
         <ZoomControl 
-        // position={kakao.maps.ControlPosition.TOPLEFT} 
+        position={kakao.maps.ControlPosition.TOPLEFT} 
         />
         <MapTypeControl
-        // position={kakao.maps.ControlPosition.TOPLEFT}
+        position={kakao.maps.ControlPosition.TOPLEFT}
         />
 
         {/* 지도에 교통정보를 표시하도록 지도타입을 추가합니다 */}

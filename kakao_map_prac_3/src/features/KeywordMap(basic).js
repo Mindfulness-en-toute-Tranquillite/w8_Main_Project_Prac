@@ -142,25 +142,25 @@ const MapContainer = ({ props }) => {
         '<span class="markerbg marker_' + (index + 1) +'"></span>' + '<div class="info">' + "<h5>" + places.place_name + "</h5>";
                 if (places.road_address_name) {
                     itemStr +=
-                      "    <span>" +
-                      places.road_address_name +
-                      "</span>" +
-                      '   <span class="jibun gray">' +
-                      `<img src="https://t1.daumcdn.net/localimg/localimages/07/mapapidoc/places_jibun.png">
-                      </img>` +
-                      places.address_name +
-                      "</span>";
-                  } else {
+                        "    <span>" +
+                        places.road_address_name +
+                        "</span>" +
+                        '   <span class="jibun gray">' +
+                        `<img src="https://t1.daumcdn.net/localimg/localimages/07/mapapidoc/places_jibun.png">
+                        </img>` +
+                        places.address_name +
+                        "</span>";
+                } else {
                     itemStr += "<span>" + places.address_name + "</span>";
-                  }
+                }
         
-                  itemStr +=
+                    itemStr +=
                     '  <span class="tel">' + places.phone + "</span>" + "</div>";
+            
+                    el.innerHTML = itemStr;
+                    el.className = "item";
         
-                  el.innerHTML = itemStr;
-                  el.className = "item";
-        
-                  return el;
+                    return el;
                 }
 
     // 마커를 생성하고 지도 위에 마커를 표시하는 함수입니다
@@ -336,7 +336,7 @@ const MapContainer = ({ props }) => {
 
 
 
-                        {Places.map((item, i) => (
+                        {/* {Places.map((item, i) => (
                         <div key={i} style={{ marginTop: '20px' }}>
                             <span>{i + 1}</span>
                             <div>
@@ -352,7 +352,7 @@ const MapContainer = ({ props }) => {
                             <span>{item.phone}</span>
                             </div>
                         </div>
-                        ))}
+                        ))} */}
                         <Portal />
                     
                 

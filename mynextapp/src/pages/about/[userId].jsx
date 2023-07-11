@@ -1,7 +1,7 @@
 
 import { useRouter } from 'next/router';
 import React from 'react'
-import Button from '@components/\bButton';
+import Button from '@components/Button';
 
 function IdInAbout() {
     const router = useRouter();

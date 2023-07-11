@@ -7,7 +7,6 @@ export default function Portal() {
   return (
     <>
       <button
-        label={'회원가입'}
         onClick={() => setShowModal(true)}
       ></button>
       {showModal &&

@@ -1,4 +1,5 @@
 import KeywordMap from '@/features/KeywordMap'
+import MapContainerWrapper2 from '@/features/KeywordMap(basic)'
 import MapContainerWrapper from '@/features/KeywordMap(basic)'
 import WriteMapPage from '@/features/Try1'
 import React from 'react'
@@ -8,7 +9,7 @@ function index() {
   return (
     <div>
       {/* <KeywordMap/> */}
-      <MapContainerWrapper/>
+      <MapContainerWrapper2/>
       {/* <KakaoExample></KakaoExample> */}
       {/* <MapContainerWrapper3/> */}
       {/* <KeywordMap/> */}
