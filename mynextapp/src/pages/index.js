@@ -1,9 +1,13 @@
 import React from 'react'
+import Head from "next/head";
 
-function App() {
+export default function Home() {
   return (
-    <div>App</div>
+    <div>
+      <Head>
+        <title>Home | Next Movies</title>
+      </Head>
+      <h1 className="active">Hello</h1>
+    </div>
   )
 }
-
-export default App
