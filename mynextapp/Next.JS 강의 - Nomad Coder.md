@@ -216,3 +216,258 @@ Frame work는 Frame work가 내 코드를 호출한다. 즉, 나는 그 코드�
 create-react-app에서는 모든 게 클라이언트 사이드 렌더링(CSR). 브라우저가 모든 걸 그려야한다.
 NextJS 어플리케이션에서는 페이지들이 미리 만들어진다. 내 컴포넌트의 초기 상태는 자동적으로 렌더링된 상태가 된다.
 Rehydration. NextJS는 페이지들을 pre-generation(사전생성)한다. 그래서 유저에게 그 HTML을 보여주고, 그 후에 ReactJS는 프론트엔드에 나타날 거고 ReactJS가 주도권을 갖게 된다.
+
+#2 Practice Project
+#2.0 Patterns 
+
+많은 사람들이 Next.JS를 이용할 때 따르는 아주 흔한 패턴을 해보자.
+
+[components/Layout.js]
+import NavBar from "./NavBar";
+
+export default function Layout({ children }) {
+    return <>
+    <NavBar />
+    <div>{children}</div>
+    </>
+}
+
+children이란, react.js가 제공하는 prop이다. 하나의 component를 또 다른 component 안에 넣을 때 쓸 수 있다.
+
+[_app.js]
+export default function App({Component, pageProps}){
+    return (
+    <Layout>
+        <Component {...pageProps} />
+    </Layout>
+    );
+}
+_app.js파일인데 Layout의 children은 <Component {...pageProps} /> 이 부분이다.
+_app.js에는 무언가 많이 들어간다. global로 임포트 해야할 것들. google analytics나 검색엔진에 관한 것, 스크립트 분석 등등. 그러니까 아주 큰 react.js component를 사용하기보다는 Layout component에다 만들어 준다. Layout에 스타일을 줄 수도 있다.
+
+우선 먼저 Next.JS가 제공하는 head component를 사용. Next.js는 이런 작은 패키지들을 쓸 수 있다. -> 만약 create react-app으로 작업하고 있다면 react helmet을 다운 받아야 했을 것이다. 그 말은, 우리의 프로젝트와는 별개인 새로운 컴포넌트, 코드, 오류 등이 생긴다는 거다. 하지만 우리의 경우에는 모든 요소가 Next.js의 우산 아래에 존재하니까, 한 군데 통일되어 있는게 좋다. 이 component 안에 들어가는 모든 것들이 우리의 html의 head 안에 보여질 거다.
+[index.js]
+import Head from "next/head";
+
+export default function Home() {
+    return (
+        <div>
+            <Head>
+                <title>Home | Next Movies</title>
+            </Head>
+            <h1 className="active">Hello</h1>
+        </div>
+    );
+}
+-> 이거를 About page, … 모든 page에 다 넣어줄 수 는 없다. 그래서 Seo 컴포넌트 만들고 커스터마이즈 해서 활용.
+
+근데 Seo import하니까 이런 오류 ->Warning: A title element received an array with more than 1 element as children. 
+ <Head>
+<title>{`${title}`} | Next Movies</title>
+</Head>
+이렇게 수정하니 오류 해결.
+[Index.js]
+import Seo from "@/components/Seo";
+
+export default function Home() {
+    return (
+        <div>
+            <Seo title="Home" />
+            <h1 className="active">Hello</h1>
+        </div>
+    );
+}
+[about.js]
+import Seo from '@/components/Seo'
+
+export default function about() {
+    return (
+        <div>
+            <Seo title="About" />
+            <h1>about</h1>
+        </div>
+    )
+}
+
+
+#2.1 Fetching Data
+이미지 파일 public에 넣어두고 경로는 /{이미지파일이름} 이렇게만 하면 된다.
+Next.js를 이용해 API keys 숨기기.
+
+create react app을 사용했다면 react를 import해줘야 하는데, 여기서는 useState를 사용하지 않으면 react를 Import할 필요 없다.
+
+#2.2 Redirect and Rewrite
+Next.js를 이용해 API keys 숨기기. 여기서 진짜 해봄. 
+
+get /api/find
+
+[next.config.js]
+
+const API_KEY = "d6a4bc48f364c0414fdafb71f660b184";
+
+const nextConfig = {
+  reactStrictMode: true,
+  async redirects(){           <-리다이렉트해준다
+    return [
+      {
+        source: "/contact/:path*", <-source는 원하는 곳( :path를 붙일 수도, *은 그 뒤에 오는거 모든 것 catch (destination으로 가져온다는 말)
+        destination: "/form", <- 그 답으로 가는 곳
+        permanent: false, <- 이것도 꼭 적어준다. 이 redirect가 영구적인지 아닌지 결정. 브라우저나 검색엔진이 이 정보를 기억하는지 여부가 결정된다. 
+      }
+    ]
+  },
+  async rewrites(){ <- redirects 는 url이 바뀌면서 변하는게 클라이언트가 봤지만 rewrites는 destination으로 가도 url은 변하지 않는다.
+    return [
+      {
+        source: "/api/movies",
+        destination: `https://api.themoviedb.org/3/movie/popular?api_key=${API_KEY}`
+      }
+
+    ]
+  }
+
+}
+
+
+[gitignore]
+# See https://help.github.com/articles/ignoring-files/ for more about ignoring files.
+
+# dependencies
+/node_modules
+/.pnp
+.pnp.js
+
+# testing
+/coverage
+
+# next.js
+/.next/
+/out/
+
+# production
+/build
+
+# misc
+.DS_Store
+*.pem
+
+# debug
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+.pnpm-debug.log*
+
+# local env files
+.env*.local
+
+# vercel
+.vercel
+.env.   <- env 파일 gitignore에 넣어야한다.
+
+redirects = source의 URL을 destination으로 바꿔서 연결해줌
+rewrites = 실제 URL은 destination 이지만 source라고 구라침
+
+#2.3 Server Side Rendering
+[index.js]
+export async function getServerSideProps(){  <-여기서 getServerSideProps라는 이름은 절대 바뀔 수 없다. export 빼먹으면 안 된다. 여기 이 자리에 어떤 코드를 쓰던지 간에 그 코드는 server에서 돌아가게 된다. client가 아니라. 즉 api key를 여기다가 숨겨도 된다.
+  
+}
+
+export default function Home({results}) {
+..
+
+export async function getServerSideProps(){
+  const { results } = await (await fetch(`/api/movies`)).json();
+  return {
+    props: {
+      results,
+    }
+  }
+}
+
+우리가 여기서 무엇을 return하던지, results를 props로써 page에게 주게 된다. 원한다면 server side를 통해 props를 page로 보낼 수 있다. 이게 _app.js의 pageProps가 필요한 이유다.
+
+#2.4 Recap
+search engine은 SSR을 좋아한다. 소스코드에서 html로 된 api data들 다 보기때문에.
+
+#2.5 Dynamic Routes
+/movies url 만들고 싶으면 pages폴더 안에 movies.js파일 만들어주면 된다. 페이지가 하나라면 폴더를 만들필요 없다. 그렇지만
+/movies/all url은 pages폴더 안에 movies라는 폴더 만들고 index.js만들면 /movies url이 되고 all.js만들면 /movies/all 이 된다. nested router (중첩라우터)같은 거다.
+
+Next.js에서는 page에 대괄호([param])를 추가하여 Dynamic Route를 생성할 수 있다.
+/movies/1, /movies/abc 등과 같은 모든 경로는 pages/movies/[id].js와 일치한다.
+
+
+#2.6 Movie Detail
+Navigating하는 방법 2가지. 
+
+1. <Link>로 하는 방법.
+
+export default function Home({ results }) {
+  return (
+    <div className="container">
+    <Seo title="Home" />
+    {results?.map((movie) => (
+      <Link legacyBehavior href={`/movies/${movie.id}`} key={movie.id}>
+        <a>
+          <div className="movie">
+            <img src={`https://image.tmdb.org/t/p/w500${movie.poster_path}`} />
+            <h4>{movie.original_title}</h4>
+          </div>
+        </a>
+      </Link>
+    ))}
+
+2. useRouter로 하는 방법.
+export default function Home({ results }) {
+  const router = useRouter();
+  const onClick = (id) => {
+    router.push(`/movies/${id}`)
+  }
+  return (
+    <div className="container">
+    <Seo title="Home" />
+    {results?.map((movie) => ( 
+          <div onClick = {() => onClick(movie.id)} className="movie" key={movie.id}>
+            <img src={`https://image.tmdb.org/t/p/w500${movie.poster_path}`} />
+            <h4>
+              <Link legacyBehavior href={`/movies/${movie.id}`}>
+              <a> {movie.original_title} </a>
+              </Link>
+              </h4>
+          </div>
+    ))}
+
+@@@@@next.config.js를 수정했으면 서버를 다시 껐다가 켜야한다.@@@@@
+
+[id.js]
+export default function Detail() {
+    const router = useRouter();
+    console.log("router",router);
+    return (
+        <div>
+            <h4>{router.query.title || "Loading..."}</h4>
+            {/* 크롬의 시크릿모드로 상세페이지로 곧바로 들어오면 Loading뜸. 
+            router.query.title이 존재하지 않기 때문에 */}
+        </div>
+    );
+
+
+#2.7 Catch All 
+catch-all URL은 뭐든 캐치해내는 URL이다. URL에 영화제목을 넣고싶다(SEO에 좋음) 그러면 이걸 쓰면 좋다. -> 유저가 홈페이지에서 클릭 통해 상세페이지에 들어오지 않더라도 영화제목을 볼 수 있다. 영화제목을 URL에서 가져올 것이기 때문. 이전에는 상세페이지에서 영화제목을 보려면 홈페이지에서 클릭을 해서 상세페이지로 넘어와야만 했다. 근데 catch-all URL쓰면 홈페이지 클릭해서 들어오지 않더라도 상세페이지에서 영화 제목을 볼 수 있다.
+
+[id].js의 파일 명을 바꾼다. […Id].js
+
+
+cognito모드(시크릿모드)에서 곧바로 상세페이지 접속시 에러 (이 페이지가 백엔드에서 pre-render되기 때문, server에서 미리 렌더링된다. 그리고 서버에는 router.query.params이 존재하지 않는다. router.query.params은 서버에서 아직 배열이 아니다. 그래서 || [] 추가 해줌.)
+[…params.js]
+const [title, id] = router.query.params || [];
+이렇게 하면 오류 없는 이유는 이거는 우리가 client-side rendering만 해준 것이다.
+
+#2.8 404 Pages
+pages폴더에 404.js만들고 함수이름은 아무거나 지정해주면 된다.
+
+[404.js]
+export default function NotFound() {
+    return "what are u doing here mate?";
+}
